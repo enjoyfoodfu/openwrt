@@ -52,6 +52,7 @@ platform_do_upgrade() {
 	avm,fritzrepeater-1200 |\
 	avm,fritzrepeater-3000 |\
 	cilab,meshpoint-one |\
+	hiwifi,c526a |\
 	mobipromo,cm520-79f |\
 	p2w,r619ac-64m |\
 	p2w,r619ac-128m |\
