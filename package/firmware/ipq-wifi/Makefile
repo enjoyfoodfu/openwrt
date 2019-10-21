@@ -28,6 +28,7 @@ ALLWIFIBOARDS:= \
 	avm_fritzrepeater-1200 \
 	linksys_ea8300 \
 	mobipromo_cm520-79f \
+	p2w_r619ac \
 	qxwlan_e2600ac
 
 ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
@@ -95,6 +96,7 @@ $(eval $(call generate-ipq-wifi-package,aruba_ap-303,Aruba AP-303))
 $(eval $(call generate-ipq-wifi-package,avm_fritzrepeater-1200,AVM FRITZRepeater 1200))
 $(eval $(call generate-ipq-wifi-package,linksys_ea8300,Linksys EA8300))
 $(eval $(call generate-ipq-wifi-package,mobipromo_cm520-79f,MobiPromo CM520-79F))
+$(eval $(call generate-ipq-wifi-package,p2w_r619ac,P&W R619AC))
 $(eval $(call generate-ipq-wifi-package,qxwlan_e2600ac,Qxwlan E2600AC))
 
 $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
