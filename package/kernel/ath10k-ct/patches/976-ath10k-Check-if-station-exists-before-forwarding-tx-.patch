@@ -79,3 +79,14 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  			spin_unlock_bh(&ar->data_lock);
  			rcu_read_unlock();
  			continue;
+--- a/ath10k-5.4/htt_rx.c
++++ b/ath10k-5.4/htt_rx.c
+@@ -2918,7 +2918,7 @@ do_generic:
+ 		spin_lock_bh(&ar->data_lock);
+ 
+ 		peer = ath10k_peer_find_by_id(ar, peer_id);
+-		if (!peer) {
++		if (!peer || !peer->sta) {
+ 			spin_unlock_bh(&ar->data_lock);
+ 			rcu_read_unlock();
+ 			continue;
