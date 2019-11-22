@@ -1,0 +1,11 @@
+--- a/net/ipv4/tcp_bbr.c
++++ b/net/ipv4/tcp_bbr.c
+@@ -322,7 +322,7 @@ static u32 bbr_tso_segs_generic(struct s
+ 	bytes = sk->sk_pacing_rate >> sk->sk_pacing_shift;
+ 
+ 	bytes = min_t(u32, bytes, gso_max_size - 1 - MAX_TCP_HEADER);
+-	segs = max_t(u32, bytes / mss_now, bbr_min_tso_segs(sk));
++	segs = max_t(u32, do_div(bytes, mss_now), bbr_min_tso_segs(sk));
+ 	return segs;
+ }
+ 

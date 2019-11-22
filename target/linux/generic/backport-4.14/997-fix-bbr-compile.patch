@@ -1,0 +1,11 @@
+--- a/net/ipv4/tcp_bbr.c
++++ b/net/ipv4/tcp_bbr.c
+@@ -393,6 +393,8 @@ static u32 bbr_bdp(struct sock *sk, u32
+  */
+ static u32 bbr_quantization_budget(struct sock *sk, u32 cwnd)
+ {
++	struct bbr *bbr = inet_csk_ca(sk);
++
+ 	/* Allow enough full-sized skbs in flight to utilize end systems. */
+ 	cwnd += 3 * bbr_tso_segs_goal(sk);
+ 

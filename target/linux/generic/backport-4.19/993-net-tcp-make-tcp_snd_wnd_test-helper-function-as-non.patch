@@ -1,0 +1,50 @@
+From 0dbdf1b57d9f2d76102c0666718a18ee088c5143 Mon Sep 17 00:00:00 2001
+From: Priyaranjan Jha <priyarjha@google.com>
+Date: Fri, 30 Mar 2018 11:28:42 -0700
+Subject: [PATCH 4/6] net-tcp: make tcp_snd_wnd_test() helper function as
+ non-static
+
+This patch makes tcp_snd_wnd_test() helper function as non-static,
+so that it can be used by other modules.
+
+Signed-off-by: Priyaranjan Jha <priyarjha@google.com>
+Reviewed-by: Neal Cardwell <ncardwell@google.com>
+Reviewed-by: Yuchung Cheng <ycheng@google.com>
+---
+ include/net/tcp.h     | 2 ++
+ net/ipv4/tcp_output.c | 6 +++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -545,6 +545,8 @@ __u32 cookie_v6_init_sequence(const stru
+ #endif
+ /* tcp_output.c */
+ 
++bool tcp_snd_wnd_test(const struct tcp_sock *tp, const struct sk_buff *skb,
++		      unsigned int cur_mss);
+ void __tcp_push_pending_frames(struct sock *sk, unsigned int cur_mss,
+ 			       int nonagle);
+ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs);
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1840,9 +1840,8 @@ static inline bool tcp_nagle_test(const
+ }
+ 
+ /* Does at least the first segment of SKB fit into the send window? */
+-static bool tcp_snd_wnd_test(const struct tcp_sock *tp,
+-			     const struct sk_buff *skb,
+-			     unsigned int cur_mss)
++bool tcp_snd_wnd_test(const struct tcp_sock *tp, const struct sk_buff *skb,
++		      unsigned int cur_mss)
+ {
+ 	u32 end_seq = TCP_SKB_CB(skb)->end_seq;
+ 
+@@ -1851,6 +1850,7 @@ static bool tcp_snd_wnd_test(const struc
+ 
+ 	return !after(end_seq, tcp_wnd_end(tp));
+ }
++EXPORT_SYMBOL(tcp_snd_wnd_test);
+ 
+ /* Trim TSO SKB to LEN bytes, put the remaining data into a new packet
+  * which is put after SKB on the list.  It is very much like

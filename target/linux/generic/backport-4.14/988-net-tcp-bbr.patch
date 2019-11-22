@@ -1,0 +1,49 @@
+From 7156d194a0772f733865267e7207e0b08f81b02b Mon Sep 17 00:00:00 2001
+From: Yousuk Seung <ysseung@google.com>
+Date: Fri, 16 Mar 2018 10:51:07 -0700
+Subject: [PATCH] tcp: add snd_ssthresh stat in SCM_TIMESTAMPING_OPT_STATS
+
+This patch adds TCP_NLA_SND_SSTHRESH stat into SCM_TIMESTAMPING_OPT_STATS
+that reports tcp_sock.snd_ssthresh.
+
+Signed-off-by: Yousuk Seung <ysseung@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Priyaranjan Jha <priyarjha@google.com>
+Signed-off-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+---
+ include/uapi/linux/tcp.h | 1 +
+ net/ipv4/tcp.c           | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+--- a/include/uapi/linux/tcp.h
++++ b/include/uapi/linux/tcp.h
+@@ -239,6 +239,7 @@ enum {
+ 	TCP_NLA_MIN_RTT,        /* minimum RTT */
+ 	TCP_NLA_RECUR_RETRANS,  /* Recurring retransmits for the current pkt */
+ 	TCP_NLA_DELIVERY_RATE_APP_LMT, /* delivery rate application limited ? */
++	TCP_NLA_SND_SSTHRESH,	/* Slow start size threshold */
+ 
+ };
+ 
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2974,7 +2974,7 @@ struct sk_buff *tcp_get_timestamping_opt
+ 	u32 rate;
+ 
+ 	stats = alloc_skb(7 * nla_total_size_64bit(sizeof(u64)) +
+-			  3 * nla_total_size(sizeof(u32)) +
++			  4 * nla_total_size(sizeof(u32)) +
+ 			  2 * nla_total_size(sizeof(u8)), GFP_ATOMIC);
+ 	if (!stats)
+ 		return NULL;
+@@ -3004,6 +3004,7 @@ struct sk_buff *tcp_get_timestamping_opt
+ 
+ 	nla_put_u8(stats, TCP_NLA_RECUR_RETRANS, inet_csk(sk)->icsk_retransmits);
+ 	nla_put_u8(stats, TCP_NLA_DELIVERY_RATE_APP_LMT, !!tp->rate_app_limited);
++	nla_put_u32(stats, TCP_NLA_SND_SSTHRESH, tp->snd_ssthresh);
+ 	return stats;
+ }
+ 
