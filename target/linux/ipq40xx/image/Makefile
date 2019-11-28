@@ -107,7 +107,7 @@ define Device/asus_map-ac2200
 	DEVICE_MODEL := Lyra (MAP-AC2200)
 	DEVICE_DTS := qcom-ipq4019-map-ac2200
 	IMAGES := sysupgrade.bin
-	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct kmod-ath3k
+	DEVICE_PACKAGES := ath10k-firmware-qca9888 kmod-ath3k
 endef
 TARGET_DEVICES += asus_map-ac2200
 
@@ -174,7 +174,7 @@ define Device/avm_fritzrepeater-3000
 	DEVICE_VENDOR := AVM
 	DEVICE_MODEL := FRITZ!Repeater 3000
 	DEVICE_DTS := qcom-ipq4019-fritzrepeater-3000
-	DEVICE_PACKAGES := ath10k-firmware-qca9984-ct fritz-caldata fritz-tffs-nand
+	DEVICE_PACKAGES := ath10k-firmware-qca9984 fritz-caldata fritz-tffs-nand
 	IMAGES := sysupgrade.bin
 endef
 TARGET_DEVICES += avm_fritzrepeater-3000
@@ -331,7 +331,7 @@ define Device/linksys_ea8300
 	UBINIZE_OPTS := -E 5    # EOD marks to "hide" factory sig at EOF
 	IMAGES := sysupgrade.bin factory.bin
 	IMAGE/factory.bin  := append-kernel | pad-to $$$${KERNEL_SIZE} | append-ubi | linksys-image type=EA8300
-	DEVICE_PACKAGES := uboot-envtools ath10k-firmware-qca9888-ct ipq-wifi-linksys_ea8300 kmod-usb-ledtrig-usbport
+	DEVICE_PACKAGES := uboot-envtools ath10k-firmware-qca9888 ipq-wifi-linksys_ea8300 kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += linksys_ea8300
 
@@ -343,7 +343,7 @@ define Device/meraki_mr33
 	BLOCKSIZE := 128k
 	PAGESIZE := 2048
 	IMAGES = sysupgrade.bin
-	DEVICE_PACKAGES := -swconfig ath10k-firmware-qca9887-ct
+	DEVICE_PACKAGES := -swconfig ath10k-firmware-qca9887
 endef
 TARGET_DEVICES += meraki_mr33
 
@@ -412,7 +412,7 @@ define Device/openmesh_a62
 	IMAGES = factory.bin sysupgrade.bin
 	IMAGE/factory.bin := append-rootfs | pad-rootfs | openmesh-image ce_type=A62
 	IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-rootfs | sysupgrade-tar rootfs=$$$$@ | append-metadata
-	DEVICE_PACKAGES := ath10k-firmware-qca9888-ct uboot-envtools
+	DEVICE_PACKAGES := ath10k-firmware-qca9888 uboot-envtools
 endef
 
 TARGET_DEVICES += openmesh_a62
