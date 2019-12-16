@@ -36,6 +36,8 @@ Package/shadowsocksr-libev-ssr-local = $(Package/shadowsocksr-libev)
 
 CONFIGURE_ARGS += --disable-documentation --disable-ssp --disable-assert
 
+TARGET_CFLAGS += -Wno-error=sizeof-pointer-memaccess
+
 define Package/shadowsocksr-libev/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
