@@ -114,6 +114,7 @@ ramips_setup_interfaces()
 		ucidef_add_switch_attr "switch0" "enable" "false"
 		ucidef_set_interface_lan "eth0"
 		;;
+	jdcloud,re-sp-01b|\
 	mikrotik,rbm33g)
 		ucidef_add_switch "switch0" \
 			"1:lan" "2:lan" "0:wan" "6@eth0"
@@ -225,6 +226,12 @@ ramips_setup_macs()
 		;;
 	jcg,jhr-ac876m)
 		label_mac=$(mtd_get_mac_binary factory 0x4)
+		wan_mac=$label_mac
+		;;
+	jdcloud,re-sp-01b)
+		local index="$(find_mtd_index "config")"
+		label_mac=$(macaddr_canonicalize $(dd if="/dev/mtd${index}" bs=12 skip=17449 iflag=skip_bytes count=1 2>/dev/null))
+		lan_mac=$label_mac
 		wan_mac=$label_mac
 		;;
 	mediatek,ap-mt7621a-v60)
