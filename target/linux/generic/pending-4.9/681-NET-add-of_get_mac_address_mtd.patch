@@ -32,7 +32,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  {
  	struct property *pp = of_find_property(np, name, NULL);
  
-@@ -47,6 +48,133 @@ static const void *of_get_mac_addr(struc
+@@ -47,6 +48,138 @@ static const void *of_get_mac_addr(struc
  	return NULL;
  }
  
@@ -56,6 +56,11 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +	if (sscanf(buf, "%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx",
 +			&mac[0], &mac[1], &mac[2], &mac[3],
 +			&mac[4], &mac[5]) == 6) {
++		if (mac[0] == '\0' && mac[1] == '\0') { /* First 2 bytes are zero, probably a bug. Trying to re-read */
++			buf[4] = '\0'; /* Make it null-terminated */
++			if (sscanf(buf, "%4hx", mac) == 1)
++				*(uint16_t*)mac = htons(*(uint16_t*)mac);
++		}
 +		return 0;
 +	}
 +	if (mtd_read(mtd, from+12, 5, &retlen, buf+12)) {
