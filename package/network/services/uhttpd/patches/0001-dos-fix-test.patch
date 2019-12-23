@@ -1,0 +1,68 @@
+From 67d388a1e70482cef2043d46f1193b3c9c0419bd Mon Sep 17 00:00:00 2001
+From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Date: Sun, 22 Dec 2019 11:00:23 +0000
+Subject: [PATCH] dos fix test
+
+Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+---
+ client.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/client.c b/client.c
+index 92f7609..9ea7e9f 100644
+--- a/client.c
++++ b/client.c
+@@ -316,6 +316,7 @@ static void client_header_complete(struct client *cl)
+ static void client_parse_header(struct client *cl, char *data)
+ {
+ 	struct http_request *r = &cl->request;
++	unsigned long int tmp;
+ 	char *err;
+ 	char *name;
+ 	char *val;
+@@ -345,11 +346,12 @@ static void client_parse_header(struct client *cl, char *data)
+ 			return;
+ 		}
+ 	} else if (!strcmp(data, "content-length")) {
+-		r->content_length = strtoul(val, &err, 0);
+-		if ((err && *err) || r->content_length < 0) {
++		tmp = strtoul(val, &err, 0);
++		if ((err && *err) || tmp > INT_MAX) {
+ 			uh_header_error(cl, 400, "Bad Request");
+ 			return;
+ 		}
++		r->content_length = (int)tmp;
+ 	} else if (!strcmp(data, "transfer-encoding")) {
+ 		if (!strcmp(val, "chunked"))
+ 			r->transfer_chunked = true;
+@@ -396,6 +398,7 @@ void client_poll_post_data(struct client *cl)
+ {
+ 	struct dispatch *d = &cl->dispatch;
+ 	struct http_request *r = &cl->request;
++	unsigned long int tmp;
+ 	char *buf;
+ 	int len;
+ 
+@@ -439,16 +442,17 @@ void client_poll_post_data(struct client *cl)
+ 
+ 		*sep = 0;
+ 
+-		r->content_length = strtoul(buf + offset, &sep, 16);
++		tmp = strtoul(buf + offset, &sep, 16);
+ 		r->transfer_chunked++;
+ 		ustream_consume(cl->us, sep + 2 - buf);
+ 
+ 		/* invalid chunk length */
+-		if ((sep && *sep) || r->content_length < 0) {
++		if ((sep && *sep) || tmp > INT_MAX) {
+ 			r->content_length = 0;
+ 			r->transfer_chunked = 0;
+ 			break;
+ 		}
++		r->content_length = (int)tmp;
+ 
+ 		/* empty chunk == eof */
+ 		if (!r->content_length) {
+-- 
+2.21.0 (Apple Git-122.2)
+
